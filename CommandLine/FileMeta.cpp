@@ -13,7 +13,7 @@ using namespace rapidxml;
 using namespace TCLAP;
 using namespace std;
 
-int wmain(int argc, WCHAR* argv[])
+int wmain(int argc, WCHAR* argv[]) //int of arguements and array of arguements passed     TMB
 {
 	int result = 0;
 	bool prompt = false;
@@ -68,9 +68,9 @@ int wmain(int argc, WCHAR* argv[])
 
 		if (xmlFileArg.isSet())
 		{
-			if (targetFiles.size() > 1)
-				throw ArgException(L"-x cannot be used with multiple files", L"xml");
-			else if (xmlDirArg.isSet())
+			//if (targetFiles.size() > 1) //is only set so that exports dont overwrite the xml file when multiple files provided? I'd like my mass imports from a single file, please.     TMB
+			//	throw ArgException(L"-x cannot be used with multiple files", L"xml");
+			if (xmlDirArg.isSet())
 				throw ArgException(L"-x and -f cannot be used together", L"xml");
 			else if (xmlConsoleSwitch.isSet())
 				throw ArgException(L"-x and -c cannot be used together", L"xml");
@@ -93,11 +93,11 @@ int wmain(int argc, WCHAR* argv[])
 				throw ArgException(L"-v can only be used with -e", L"explorer");
 		}
 
-		for (auto pos = targetFiles.begin(); pos != targetFiles.end(); ++pos)
+		for (auto pos = targetFiles.begin(); pos != targetFiles.end(); ++pos) //runs through all the flag options for each arguement.    TMB
 		{
 			wstring targetFile(*pos);
 
-			if (!PathFileExists(targetFile.c_str()))
+			if (!PathFileExists(targetFile.c_str())) //does this file exist?     TMB  
 			{
 				wcerr << L"Cannot find file \"" << targetFile.c_str() << L"\"" << endl;
 				result = ERROR_FILE_NOT_FOUND;
@@ -125,13 +125,13 @@ int wmain(int argc, WCHAR* argv[])
 			{
 				wstring xmlFile;
 
-				// Build XML file name 
-				if (xmlFileArg.isSet())
+				// Build XML file name
+				if (xmlFileArg.isSet()) //if -x is set, use for imports and exports     TMB
 				{
 					// use specified file
 					xmlFile = xmlFileArg.getValue();
 				}
-				else if (xmlDirArg.isSet())
+				else if (xmlDirArg.isSet()) //if -f is set, use for exports     TMB
 				{
 					// build from specified directory and target file stem
 					WCHAR buf[MAX_PATH];
@@ -140,7 +140,7 @@ int wmain(int argc, WCHAR* argv[])
 					xmlFile = buf;
 					xmlFile += MetadataFileSuffix;
 				}
-				else
+				else //if no flag assume its a default export filename in the working directory     TMB
 				{
 					// build from full target file name
 					xmlFile = targetFile + MetadataFileSuffix;
